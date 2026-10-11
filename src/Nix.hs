@@ -27,7 +27,6 @@ module Nix
     runUpdateScript,
     fakeHashMatching,
     version,
-    Raw (..),
   )
 where
 
@@ -43,18 +42,6 @@ import Prelude hiding (log)
 
 binPath :: String
 binPath = fromJust ($$(envQ "NIX") :: Maybe String) <> "/bin"
-
-data Env = Env [(String, String)]
-
-data Raw
-  = Raw
-  | NoRaw
-
-data EvalOptions = EvalOptions Raw Env
-
-rawOpt :: Raw -> [String]
-rawOpt Raw = ["--raw"]
-rawOpt NoRaw = []
 
 nixEvalApply ::
   (MonadIO m) =>
