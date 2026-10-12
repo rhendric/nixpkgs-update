@@ -1,6 +1,7 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 
 module Utils
@@ -28,6 +29,7 @@ module Utils
     outpathCacheDir,
     cacheDir,
     worktreeDir,
+    timeoutBin,
   )
 where
 
@@ -46,6 +48,7 @@ import Database.SQLite.Simple.Internal (Field (..))
 import Database.SQLite.Simple.Ok (Ok (..))
 import Database.SQLite.Simple.ToField (ToField, toField)
 import qualified GitHub as GH
+import Language.Haskell.TH.Env (envQ)
 import OurPrelude
 import Polysemy.Output
 import System.Directory (createDirectoryIfMissing, doesDirectoryExist)
@@ -72,6 +75,9 @@ type ProductID = Text
 type Version = Text
 
 type URL = Text
+
+timeoutBin :: String
+timeoutBin = fromJust ($$(envQ "TIMEOUT") :: Maybe String) <> "/bin/timeout"
 
 -- | The Ord instance is used to sort lists of matchers in order to compare them
 -- as a set, it is not useful for comparing bounds since the ordering of bounds
